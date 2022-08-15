@@ -16,8 +16,7 @@ jobs:
           cache: npm
       - run: make install
       - run: make publish
-      - run: make test
-      - run: make lint
+
 
       - uses: paambaati/codeclimate-action@v3.0.0
         env:
