@@ -1,4 +1,5 @@
 import 'bootstrap';
 import '../styles.scss';
 
-console.log('Hello World!');
+// const examp = (param) => param;
+// export default examp;
