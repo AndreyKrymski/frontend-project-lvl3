@@ -1,5 +1,6 @@
-import 'bootstrap';
-import '../styles.scss';
+// @ts-check
 
-// const examp = (param) => param;
-// export default examp;
+import init from "./init.js";
+import "./style.css";
+
+init();

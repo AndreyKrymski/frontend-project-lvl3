@@ -11,11 +11,13 @@ build:
 publish :
 	npm publish --dry-run
 
-make lint:
+lint:
 	npx eslint .
 
-make test:
-	npx jest
+test:
+	npm test
 
-make coverage:
+coverage:
 	npm test -- --coverage
+
+.PHONY: test

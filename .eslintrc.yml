@@ -1,8 +1,12 @@
 plugins:
   - jest
+  - babel
 env:
   browser: true
   es2021: true
+  node: true
+  jest: true
+parser: "@babel/eslint-parser"
 extends:
   - 'airbnb-base'
   - 'plugin:jest/recommended'
@@ -12,8 +16,6 @@ parserOptions:
   sourceType: module
 rules:
   no-console: 0
-  import/extensions: # FIXME: remove when rule will be adjusted for new nodejs version
-    - error
-    - ignorePackages
-    - js: always
+  import/extensions: 
+  import/extensions: 0
   no-underscore-dangle: [2, { "allow": ["__filename", "__dirname"] }]
