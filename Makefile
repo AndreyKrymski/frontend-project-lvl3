@@ -1,10 +1,21 @@
+develop:
+	npx webpack serve
+
 install :
 	npm ci
+
+build:
+	rm -rf dist
+	NODE_ENV=production npx webpack
+
 publish :
 	npm publish --dry-run
+
 make lint:
 	npx eslint .
+
 make test:
-	NODE_OPTIONS=--experimental-vm-modules npx jest
+	npx jest
+
 make coverage:
-	npm test -- --coverage
+	npx jest --coverage
