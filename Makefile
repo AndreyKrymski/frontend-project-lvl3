@@ -18,4 +18,4 @@ make test:
 	npx jest
 
 make coverage:
-	npm test -- --coverage
+	npx jest --coverage
