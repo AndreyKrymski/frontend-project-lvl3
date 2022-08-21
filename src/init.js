@@ -1,4 +1,4 @@
-// @ts-check
+// @ts-nocheck
 import * as yup from 'yup';
 import onChange from 'on-change';
 
@@ -10,7 +10,6 @@ const elements = {
   urlInput: document.getElementById('url-input'),
 };
 const render = (state) => {
-  console.log(state.erorr);
   if (state.isValid) {
     elements.textFeedback.textContent = 'RSS успешно загружен';
     elements.textFeedback.classList.add('text-success');
@@ -32,22 +31,26 @@ export default () => {
     url: [],
     erorr: [],
   };
-  const watcheState = onChange(state, () => {
-    render(state);
-  });
+  //const watcheState = onChange(state, () => {
+  //  render(state);
+  //});
 
   const validateUrl = (link) => {
     const schema = yup.string().url('Ссылка должна быть валидным URL').notOneOf(state.url, 'RSS уже существует');
     return schema.validate(link)
       .then(() => {
         state.url.push(link);
-        state.erorr = [];
-        watcheState.isValid = true;
+        state.isValid = true;
+        render(state);
       })
       .catch((e) => {
         state.erorr.push(e.message);
-        watcheState.isValid = false;
-      });
+        state.isValid = false;
+        render(state);
+      })
+      .finally(() => {
+        state.erorr = [];
+      })
   };
 
   elements.textBody.addEventListener('submit', (e) => {
