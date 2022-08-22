@@ -56,7 +56,9 @@
     "@popperjs/core": "^2.11.6",
     "bootstrap": "^5.0.2",
     "npm-check-updates": "^11.8.5",
+    "on-change": "^4.0.1",
     "sass": "^1.39.0",
-    "sass-loader": "^12.1.0"
+    "sass-loader": "^12.1.0",
+    "yup": "^0.32.11"
   }
 }
