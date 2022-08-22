@@ -1,55 +1,62 @@
 // @ts-nocheck
 import * as yup from 'yup';
 import elements from './elementsDom.js';
+import resources from './locales/index.js';
+import i18next from 'i18next';
+import render from './render.js'
 
-function render(state) {
-  if (state.isValid) {
-    elements.textFeedback.textContent = 'RSS успешно загружен';
-    elements.textFeedback.classList.add('text-success');
-    elements.textFeedback.classList.remove('text-danger');
-    elements.urlInput.classList.remove('is-invalid');
-    elements.textBody.reset();
-    elements.urlInput.focus();
-  } else {
-    elements.textFeedback.textContent = state.erorr.join();
-    elements.urlInput.classList.remove('text-success');
-    elements.urlInput.classList.add('is-invalid');
-    elements.textFeedback.classList.remove('text-success');
-    elements.textFeedback.classList.add('text-danger');
-  }
-}
+
 export default () => {
-  const state = {
-    isValid: null,
-    url: [],
-    erorr: [],
-  };
-  // const watcheState = onChange(state, () => {
-  //  render(state);
-  // });
+  const defaultLng = 'ru';
+  const i18nextInstance = i18next.createInstance();
+   return i18nextInstance.init({
+    lng: defaultLng,
+    debug: true,
+    resources,
+  })
+  .then(() => {
 
-  const validateUrl = (link) => {
-    const schema = yup.string().url('Ссылка должна быть валидным URL').notOneOf(state.url, 'RSS уже существует');
-    return schema.validate(link)
-      .then(() => {
-        state.url.push(link);
-        state.isValid = true;
-        render(state);
-      })
-      .catch((e) => {
-        state.erorr.push(e.message);
-        state.isValid = false;
-        render(state);
-      })
-      .finally(() => {
-        state.erorr = [];
-      });
-  };
+    const state = {
+      status: null,
+      isValid: null,
+      url: [],
+      erorr: [],
+    };
+    // const watcheState = onChange(state, () => {
+    //  render(state);
+    // });
+  
+    const validateUrl = (link) => {
+      const schema = yup.string().url(i18nextInstance.t('errors.errorsUrl')).notOneOf(state.url, i18nextInstance.t('errors.errorsDuplication'));
+      return schema.validate(link)
+        .then(() => {
+          state.url.push(link);
+          state.status = 'valid';
+          render(state, i18nextInstance);
+        })
+        .catch((e) => {
+          state.erorr.push(e.message);
+          state.status = 'invalid';
+          render(state);
+        })
+        .finally(() => {
+          state.erorr = [];
+        });
+    };
+  
+    elements.textBody.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const form = new FormData(e.target);
+      const value = form.get('url');
+      validateUrl(value);
+    });
 
-  elements.textBody.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const form = new FormData(e.target);
-    const value = form.get('url');
-    validateUrl(value);
-  });
+
+
+  })
+ 
+
+
+    
+  
 };
