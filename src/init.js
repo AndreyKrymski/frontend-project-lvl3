@@ -1,15 +1,8 @@
 // @ts-nocheck
 import * as yup from 'yup';
-import onChange from 'on-change';
+import elements from './elementsDom.js';
 
-const elements = {
-  posts: document.querySelector('.posts'),
-  feeds: document.querySelector('.feeds'),
-  textBody: document.querySelector('.text-body'),
-  textFeedback: document.querySelector('.feedback'),
-  urlInput: document.getElementById('url-input'),
-};
-const render = (state) => {
+function render(state) {
   if (state.isValid) {
     elements.textFeedback.textContent = 'RSS успешно загружен';
     elements.textFeedback.classList.add('text-success');
@@ -24,16 +17,16 @@ const render = (state) => {
     elements.textFeedback.classList.remove('text-success');
     elements.textFeedback.classList.add('text-danger');
   }
-};
+}
 export default () => {
   const state = {
     isValid: null,
     url: [],
     erorr: [],
   };
-  //const watcheState = onChange(state, () => {
+  // const watcheState = onChange(state, () => {
   //  render(state);
-  //});
+  // });
 
   const validateUrl = (link) => {
     const schema = yup.string().url('Ссылка должна быть валидным URL').notOneOf(state.url, 'RSS уже существует');
@@ -50,7 +43,7 @@ export default () => {
       })
       .finally(() => {
         state.erorr = [];
-      })
+      });
   };
 
   elements.textBody.addEventListener('submit', (e) => {
