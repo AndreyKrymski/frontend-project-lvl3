@@ -25,7 +25,15 @@ export default () => {
       });
 
       const validateUrl = (link) => {
-        const schema = yup.string().url(i18nextInstance.t('errors.errorsUrl')).notOneOf(state.url, i18nextInstance.t('errors.errorsDuplication'));
+        yup.setLocale({
+          mixed: {
+            notOneOf: () => i18nextInstance.t('errors.errorsDuplication'),
+          },
+          string: {
+            url: () => i18nextInstance.t('errors.errorsUrl'),
+          },
+        });
+        const schema = yup.string().url().notOneOf(state.url);
         return schema.validate(link)
           .then(() => {
             state.url.push(link);
