@@ -1,55 +1,56 @@
 // @ts-nocheck
 import * as yup from 'yup';
+import i18next from 'i18next';
+import onChange from 'on-change';
 import elements from './elementsDom.js';
+import resources from './locales/index.js';
+import render from './render.js';
 
-function render(state) {
-  if (state.isValid) {
-    elements.textFeedback.textContent = 'RSS успешно загружен';
-    elements.textFeedback.classList.add('text-success');
-    elements.textFeedback.classList.remove('text-danger');
-    elements.urlInput.classList.remove('is-invalid');
-    elements.textBody.reset();
-    elements.urlInput.focus();
-  } else {
-    elements.textFeedback.textContent = state.erorr.join();
-    elements.urlInput.classList.remove('text-success');
-    elements.urlInput.classList.add('is-invalid');
-    elements.textFeedback.classList.remove('text-success');
-    elements.textFeedback.classList.add('text-danger');
-  }
-}
 export default () => {
-  const state = {
-    isValid: null,
-    url: [],
-    erorr: [],
-  };
-  // const watcheState = onChange(state, () => {
-  //  render(state);
-  // });
-
-  const validateUrl = (link) => {
-    const schema = yup.string().url('Ссылка должна быть валидным URL').notOneOf(state.url, 'RSS уже существует');
-    return schema.validate(link)
-      .then(() => {
-        state.url.push(link);
-        state.isValid = true;
-        render(state);
-      })
-      .catch((e) => {
-        state.erorr.push(e.message);
-        state.isValid = false;
-        render(state);
-      })
-      .finally(() => {
-        state.erorr = [];
+  const defaultLng = 'ru';
+  const i18nextInstance = i18next.createInstance();
+  return i18nextInstance.init({
+    lng: defaultLng,
+    debug: true,
+    resources,
+  })
+    .then(() => {
+      const state = {
+        statusValidation: null,
+        url: [],
+        erorr: null,
+      };
+      const watcheState = onChange(state, () => {
+        render(state, i18nextInstance);
       });
-  };
 
-  elements.textBody.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const form = new FormData(e.target);
-    const value = form.get('url');
-    validateUrl(value);
-  });
+      const validateUrl = (link) => {
+        yup.setLocale({
+          mixed: {
+            notOneOf: () => i18nextInstance.t('errors.errorsDuplication'),
+          },
+          string: {
+            url: () => i18nextInstance.t('errors.errorsUrl'),
+          },
+        });
+        const schema = yup.string().url().notOneOf(state.url);
+        return schema.validate(link)
+          .then(() => {
+            state.url.push(link);
+            state.statusValidation = 'valid';
+            watcheState.erorr = '';
+          })
+          .catch((e) => {
+            state.statusValidation = 'invalid';
+            watcheState.erorr = e.message;
+          });
+      };
+
+      elements.textBody.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const form = new FormData(e.target);
+        const value = form.get('url');
+        validateUrl(value);
+      });
+    });
 };
