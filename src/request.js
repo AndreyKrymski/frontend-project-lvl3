@@ -1,6 +1,7 @@
 import axios from 'axios';
 import parser from './parser.js';
-import rendering from './rendering.js';
+import renderingPost from './renderingPosts.js';
+import renderingFeeds from './renderingFeeds.js';
 
 export default function request(value, watcheState, state) {
   value.forEach((item) => {
@@ -9,7 +10,8 @@ export default function request(value, watcheState, state) {
       .then((answer) => {
         const xml = parser(answer);
         watcheState.statusValidation = 'valid';
-        rendering(xml);
+        renderingPost(xml);
+        renderingFeeds(xml);
       })
       .catch((e) => {
         state.statusValidation = 'invalid';
