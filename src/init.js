@@ -2,6 +2,7 @@
 import * as yup from 'yup';
 import i18next from 'i18next';
 import onChange from 'on-change';
+import request from './request.js';
 import elements from './elementsDom.js';
 import resources from './locales/index.js';
 import render from './render.js';
@@ -23,6 +24,9 @@ export default () => {
       const watcheState = onChange(state, () => {
         render(state, i18nextInstance);
       });
+      const watcheStateUrl = onChange(state, (path, value) => {
+        request(value, watcheState, state);
+      });
 
       const validateUrl = (link) => {
         yup.setLocale({
@@ -36,8 +40,8 @@ export default () => {
         const schema = yup.string().url().notOneOf(state.url);
         return schema.validate(link)
           .then(() => {
-            state.url.push(link);
-            state.statusValidation = 'valid';
+            watcheStateUrl.url.push(link);
+            state.statusValidation = 'processing';
             watcheState.erorr = '';
           })
           .catch((e) => {

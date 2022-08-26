@@ -4,4 +4,5 @@ export default {
   textBody: document.querySelector('.text-body'),
   textFeedback: document.querySelector('.feedback'),
   urlInput: document.getElementById('url-input'),
+  buttonRss: document.querySelector('[aria-label="add"]'),
 };
