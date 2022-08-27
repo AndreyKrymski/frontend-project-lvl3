@@ -1,9 +1,9 @@
-export default function parser(answer, i18nextInstance) {
+export default function parser(answer, message) {
   const pars = new DOMParser();
   const xml = pars.parseFromString(answer, 'application/xml');
   const parsererror = xml.querySelector('parsererror');
   if (parsererror) {
-    throw new Error(i18nextInstance.t('errors.errorValidRSS'));
+    throw new Error(message);
   } else {
     const item = xml.querySelectorAll('item');
     const arrayXml = [];

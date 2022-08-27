@@ -1,12 +1,12 @@
 import elements from './elementsDom.js';
 import view from './view.js';
 
-export default function rendering(xml, i18nextInstance) {
+export default function rendering(xml, message) {
   const div = document.createElement('div');
   div.classList.add('card', 'border-0');
   div.innerHTML = `
     <div class="card-body">
-      <h2 class="card-title h4">${i18nextInstance.t('text.fids')}</h2>
+      <h2 class="card-title h4">${message}</h2>
     </div>
     <ul class="list-group border-0 rounded-0">
       <li class="list-group-item border-0 border-end-0">

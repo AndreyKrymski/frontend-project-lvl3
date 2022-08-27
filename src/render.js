@@ -1,8 +1,8 @@
 import elements from './elementsDom.js';
 
-export default function render(state, i18nextInstance) {
+export default function render(state, message) {
   if (state.statusValidation === 'valid') {
-    elements.textFeedback.textContent = i18nextInstance.t('status.valid');
+    elements.textFeedback.textContent = message;
     elements.textFeedback.classList.replace('text-danger', 'text-success');
     elements.urlInput.classList.remove('is-invalid');
     elements.urlInput.removeAttribute('readonly');

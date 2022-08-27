@@ -26,16 +26,16 @@ export default () => {
         activeLink: null,
       };
       const watcheState = onChange(state, () => {
-        render(state, i18nextInstance);
+        render(state, i18nextInstance.t('status.valid'));
       });
       const watcheStateUrl = onChange(state, (path, value) => {
         axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(value)}`)
           .then((response) => response.data.contents)
           .then((answer) => {
-            const xml = parser(answer, i18nextInstance);
+            const xml = parser(answer, i18nextInstance.t('errors.errorValidRSS'));
             watcheState.statusValidation = 'valid';
-            renderingPost(xml, i18nextInstance);
-            renderingFeed(xml, i18nextInstance);
+            renderingPost(xml, i18nextInstance.t('text.posts'));
+            renderingFeed(xml, i18nextInstance.t('text.fids'));
           })
           .catch((e) => {
             state.statusValidation = 'invalid';

@@ -1,6 +1,6 @@
 import elements from './elementsDom.js';
 
-export default function rendering(xml, i18nextInstance) {
+export default function rendering(xml, message) {
   const ul = document.createElement('ul');
   ul.classList.add('list-group', 'border-0', 'rounded-0');
   xml.posts.forEach((it) => {
@@ -15,7 +15,7 @@ export default function rendering(xml, i18nextInstance) {
   div2.classList.add('card', 'border-0');
   div2.innerHTML = `
     <div class="card-body">
-      <h2 class="card-title h4">${i18nextInstance.t('text.posts')}</h2>
+      <h2 class="card-title h4">${message}</h2>
     </div>`;
   div2.append(ul);
   elements.posts.append(div2);
