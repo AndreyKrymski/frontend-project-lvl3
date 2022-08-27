@@ -3,9 +3,14 @@ export default {
     errors: {
       errorsUrl: 'Link must be a valid URL',
       errorsDuplication: 'RSS already exists',
+      errorValidRSS: 'The resource does not contain valid RSS',
     },
     status: {
       valid: 'RSS uploaded successfully',
+    },
+    text: {
+      fids: 'Fids',
+      posts: 'Posts',
     },
   },
 };

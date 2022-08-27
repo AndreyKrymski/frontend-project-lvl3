@@ -2,7 +2,10 @@
 import * as yup from 'yup';
 import i18next from 'i18next';
 import onChange from 'on-change';
-import request from './request.js';
+import axios from 'axios';
+import parser from './parser.js';
+import renderingPost from './renderingPosts.js';
+import renderingFeed from './renderingFeeds.js';
 import elements from './elementsDom.js';
 import resources from './locales/index.js';
 import render from './render.js';
@@ -20,12 +23,24 @@ export default () => {
         statusValidation: null,
         url: [],
         erorr: null,
+        activeLink: null,
       };
       const watcheState = onChange(state, () => {
         render(state, i18nextInstance);
       });
       const watcheStateUrl = onChange(state, (path, value) => {
-        request(value, watcheState, state);
+        axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(value)}`)
+          .then((response) => response.data.contents)
+          .then((answer) => {
+            const xml = parser(answer, i18nextInstance);
+            watcheState.statusValidation = 'valid';
+            renderingPost(xml, i18nextInstance);
+            renderingFeed(xml, i18nextInstance);
+          })
+          .catch((e) => {
+            state.statusValidation = 'invalid';
+            watcheState.erorr = e.message;
+          });
       });
 
       const validateUrl = (link) => {
@@ -40,7 +55,8 @@ export default () => {
         const schema = yup.string().url().notOneOf(state.url);
         return schema.validate(link)
           .then(() => {
-            watcheStateUrl.url.push(link);
+            state.url.push(link);
+            watcheStateUrl.activeLink = link;
             state.statusValidation = 'processing';
             watcheState.erorr = '';
           })
