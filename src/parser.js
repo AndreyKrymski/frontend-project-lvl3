@@ -1,4 +1,4 @@
-export default function parser(answer, message) {
+export default function parser(answer, message, state) {
   const pars = new DOMParser();
   const xml = pars.parseFromString(answer, 'application/xml');
   const parsererror = xml.querySelector('parsererror');
@@ -7,7 +7,7 @@ export default function parser(answer, message) {
   } else {
     const item = xml.querySelectorAll('item');
     const arrayXml = [];
-    let idNumber = 0;
+    let idNumber = state.id;
     item.forEach((it) => {
       idNumber += 1;
       arrayXml.push({
@@ -22,6 +22,6 @@ export default function parser(answer, message) {
       fidsDescription: xml.querySelector('description').textContent,
       posts: arrayXml,
     };
-    return xmlObj;
+    return [xmlObj, idNumber];
   }
 }

@@ -9,8 +9,8 @@ export default function view(objectID) {
   const modalBody = document.querySelector('.modal-body');
   const buttonClose = document.querySelectorAll('[data-bs-dismiss="modal"]');
   const linkButton = document.querySelector('.full-article');
-  modalTitle.innerHTML = objectID.text;
-  modalBody.innerHTML = objectID.description;
+  modalTitle.textContent = objectID.text;
+  modalBody.textContent = objectID.description;
   linkButton.setAttribute('href', objectID.link);
   buttonClose.forEach((it) => {
     it.addEventListener('click', () => {
