@@ -9,7 +9,7 @@ export default {
       valid: 'RSS успешно загружен',
     },
     text: {
-      fids: 'Фиды',
+      feeds: 'Фиды',
       posts: 'Посты',
     },
   },

@@ -9,7 +9,7 @@ export default {
       valid: 'RSS uploaded successfully',
     },
     text: {
-      fids: 'Fids',
+      feeds: 'Fids',
       posts: 'Posts',
     },
   },
