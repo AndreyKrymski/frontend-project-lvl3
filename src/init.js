@@ -23,16 +23,15 @@ export default () => {
       const state = {
         isProcessing: null,
         url: [],
-        erorr: null,
         rssFiles: [],
       };
       const watcheState = onChange(state, (path, value) => {
         if (path === 'isProcessing') {
           renderProccess(value);
         } else if (path === 'erorr') {
-          render(state);
+          render(value);
         } else if (path === 'statusValidation') {
-          render(state, i18nextInstance.t('status.valid'));
+          render(value, i18nextInstance.t('status.valid'));
           renderPostAndFeeds(state, i18nextInstance);
           const buttonPost = document.querySelectorAll('[data-bs-toggle="modal"]');
           buttonPost.forEach((item) => {
@@ -52,6 +51,7 @@ export default () => {
         const form = new FormData(e.target);
         const value = form.get('url');
         state.statusValidation = null;
+        state.erorr = null;
         validateUrl(value, state, i18nextInstance)
           .then(() => {
             state.erorr = '';
@@ -65,13 +65,11 @@ export default () => {
                 watcheState.statusValidation = 'valid';
               })
               .catch((error) => {
-                state.statusValidation = 'invalid';
                 watcheState.isProcessing = 'processingCompleted';
                 watcheState.erorr = error.message;
               });
           })
           .catch((error) => {
-            state.statusValidation = 'invalid';
             watcheState.isProcessing = 'processingCompleted';
             watcheState.erorr = error.message;
           });
