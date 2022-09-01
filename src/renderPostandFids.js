@@ -33,7 +33,7 @@ export default function renderPostAndFeeds(state, i18nextInstance) {
     </li>`;
     ulFeeds.prepend(liFeeds);
 
-    item.posts.forEach((it) => {
+    item.post.forEach((it) => {
       const liPosts = document.createElement('li');
       liPosts.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
       liPosts.innerHTML = `

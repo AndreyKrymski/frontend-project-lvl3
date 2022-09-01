@@ -6,10 +6,11 @@ import parser from './parser.js';
 import elements from './elementsDom.js';
 import resources from './locales/index.js';
 import render from './render.js';
-import renderPostAndFeeds from './renderingPostandFids.js';
+import renderPostAndFeeds from './renderPostandFids.js';
 import renderButtonPosts from './renderButtonPosts.js';
 import validateUrl from './validateUrl.js';
 import renderProccess from './isProcess.js';
+import startTimer from './startTimer.js';
 
 export default () => {
   const defaultLng = 'ru';
@@ -25,15 +26,14 @@ export default () => {
         rssFiles: [],
         statusValidation: false,
         isProcessing: false,
-        erorr: null,
+        message: null,
       };
-      const watcheState = onChange(state, (path, value) => {
+      const watcheState = onChange(state, (path) => {
         if (path === 'isProcessing') {
-          renderProccess(value);
-        } else if (path === 'erorr') {
-          render(path, value);
-        } else if (path === 'statusValidation') {
-          render(path, i18nextInstance.t('status.valid'));
+          renderProccess(state.isProcessing);
+        } else if (path === 'message') {
+          render(state);
+        } else if (path === 'rssFiles') {
           renderPostAndFeeds(state, i18nextInstance);
           renderButtonPosts(state);
         }
@@ -47,18 +47,21 @@ export default () => {
         validateUrl(value, state, i18nextInstance)
           .then(() => axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(value)}`))
           .then((response) => {
-            const objectPostandFeeds = parser(response.data.contents, i18nextInstance.t('errors.errorValidRSS'));
+            const postandFeeds = parser(response.data.contents, i18nextInstance.t('errors.errorValidRSS'));
+            state.statusValidation = true;
+            watcheState.message = i18nextInstance.t('status.valid');
             state.url.push(value);
-            state.rssFiles.push(objectPostandFeeds);
-            watcheState.statusValidation = true;
+            watcheState.rssFiles.push(postandFeeds);
             state.statusValidation = false;
           })
           .catch((error) => {
-            watcheState.erorr = error.message;
-            state.erorr = '';
+            state.statusValidation = false;
+            watcheState.message = error.message;
+            state.message = '';
           })
           .finally(() => {
             watcheState.isProcessing = false;
+            //startTimer(state);
           });
       });
     });

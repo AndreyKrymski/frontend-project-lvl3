@@ -1,7 +1,7 @@
 import elements from './elementsDom.js';
 
-export default function renderProccess(value) {
-  if (value) {
+export default function renderProccess(isProcess) {
+  if (isProcess) {
     elements.urlInput.setAttribute('readonly', 'true');
     elements.buttonRss.setAttribute('disabled', 'disabled');
     elements.urlInput.classList.remove('is-invalid');

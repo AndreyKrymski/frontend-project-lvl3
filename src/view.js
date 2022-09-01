@@ -1,7 +1,7 @@
 import elements from './elementsDom';
 
 export default function view(state, id) {
-  const [objectID] = state.rssFiles.flatMap((it) => it.posts).filter((iter) => iter.id === id);
+  const [objectID] = state.rssFiles.flatMap((it) => it.post).filter((iter) => iter.id === id);
   elements.body.classList.add('modal-open');
   elements.body.setAttribute('style', 'overflow: hidden; padding-right: 17px;');
   elements.modal.setAttribute('style', 'display: block;');
