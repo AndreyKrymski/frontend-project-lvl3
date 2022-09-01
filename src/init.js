@@ -7,7 +7,7 @@ import elements from './elementsDom.js';
 import resources from './locales/index.js';
 import render from './render.js';
 import renderPostAndFeeds from './renderingPostandFids.js';
-import view from './view.js';
+import renderButtonPosts from './renderButtonPosts.js';
 import validateUrl from './validateUrl.js';
 import renderProccess from './isProcess.js';
 
@@ -21,57 +21,44 @@ export default () => {
   })
     .then(() => {
       const state = {
-        isProcessing: null,
         url: [],
         rssFiles: [],
+        statusValidation: false,
+        isProcessing: false,
+        erorr: null,
       };
       const watcheState = onChange(state, (path, value) => {
         if (path === 'isProcessing') {
           renderProccess(value);
         } else if (path === 'erorr') {
-          render(value);
+          render(path, value);
         } else if (path === 'statusValidation') {
-          render(value, i18nextInstance.t('status.valid'));
+          render(path, i18nextInstance.t('status.valid'));
           renderPostAndFeeds(state, i18nextInstance);
-          const buttonPost = document.querySelectorAll('[data-bs-toggle="modal"]');
-          buttonPost.forEach((item) => {
-            item.addEventListener('click', (e) => {
-              e.preventDefault();
-              const objectID = state.rssFiles.flatMap((it) => it.posts)
-                .filter((iter) => iter.id === e.target.dataset.id);
-              view(...objectID);
-            });
-          });
+          renderButtonPosts(state);
         }
       });
 
       elements.textBody.addEventListener('submit', (e) => {
         e.preventDefault();
-        watcheState.isProcessing = 'processing';
+        watcheState.isProcessing = true;
         const form = new FormData(e.target);
         const value = form.get('url');
-        state.statusValidation = null;
-        state.erorr = null;
         validateUrl(value, state, i18nextInstance)
-          .then(() => {
-            state.erorr = '';
-            axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(value)}`)
-              .then((response) => {
-                const objXml = parser(response.data.contents, i18nextInstance.t('errors.errorValidRSS'), state);
-                watcheState.isProcessing = 'processingCompleted';
-                state.erorr = '';
-                state.url.push(value);
-                state.rssFiles.push(objXml);
-                watcheState.statusValidation = 'valid';
-              })
-              .catch((error) => {
-                watcheState.isProcessing = 'processingCompleted';
-                watcheState.erorr = error.message;
-              });
+          .then(() => axios.get(`https://allorigins.hexlet.app/get?url=${encodeURIComponent(value)}`))
+          .then((response) => {
+            const objectPostandFeeds = parser(response.data.contents, i18nextInstance.t('errors.errorValidRSS'));
+            state.url.push(value);
+            state.rssFiles.push(objectPostandFeeds);
+            watcheState.statusValidation = true;
+            state.statusValidation = false;
           })
           .catch((error) => {
-            watcheState.isProcessing = 'processingCompleted';
             watcheState.erorr = error.message;
+            state.erorr = '';
+          })
+          .finally(() => {
+            watcheState.isProcessing = false;
           });
       });
     });

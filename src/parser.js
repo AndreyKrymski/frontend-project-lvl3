@@ -8,19 +8,19 @@ export default function parser(response, message) {
     throw new Error(message);
   }
   const item = xml.querySelectorAll('item');
-  const arrayXml = [];
+  const massivPosts = [];
   item.forEach((it) => {
-    arrayXml.push({
+    massivPosts.push({
       id: _.uniqueId(),
       link: it.querySelector('link').textContent,
       text: it.querySelector('title').textContent,
       description: it.querySelector('description').textContent,
     });
   });
-  const xmlObj = {
+  const objectPostandFeeds = {
     fidsTitle: xml.querySelector('title').textContent,
     fidsDescription: xml.querySelector('description').textContent,
-    posts: arrayXml,
+    posts: massivPosts,
   };
-  return xmlObj;
+  return objectPostandFeeds;
 }
