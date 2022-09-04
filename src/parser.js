@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export default function parser(response, message) {
   const pars = new DOMParser();
   const xml = pars.parseFromString(response, 'application/xml');
@@ -11,7 +9,6 @@ export default function parser(response, message) {
   const posts = [];
   item.forEach((it) => {
     posts.push({
-      id: _.uniqueId(),
       link: it.querySelector('link').textContent,
       text: it.querySelector('title').textContent,
       description: it.querySelector('description').textContent,

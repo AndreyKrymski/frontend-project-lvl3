@@ -23,7 +23,6 @@ export default function renderPostAndFeeds(state, i18nextInstance) {
   elements.posts.prepend(divPosts);
 
   const ulPosts = elements.posts.querySelector('ul');
-
   state.rssFiles.forEach((item) => {
     const liFeeds = document.createElement('li');
     liFeeds.classList.add('list-group-item', 'border-0', 'border-end-0');
