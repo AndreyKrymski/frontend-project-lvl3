@@ -2,6 +2,7 @@ import elements from './elementsDom';
 
 export default function view(state, id) {
   const [post] = state.data.posts.filter((item) => item.id === id);
+  post.isVisited = true;
   const buttonPost = document.querySelector(`[data-id="${id}"]`);
   buttonPost.classList.remove('fw-bold');
   buttonPost.classList.add('link-secondary', 'fw-normal');
