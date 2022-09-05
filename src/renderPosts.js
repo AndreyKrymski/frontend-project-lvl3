@@ -14,9 +14,15 @@ export default function renderPosts(state, i18nextInstance) {
   for (let i = state.data.posts.length - 1; i >= 0; i -= 1) {
     const liPosts = document.createElement('li');
     liPosts.classList.add('list-group-item', 'd-flex', 'justify-content-between', 'align-items-start', 'border-0', 'border-end-0');
-    liPosts.innerHTML = `
+    if (state.data.posts[i].isVisited) {
+      liPosts.innerHTML = `
+      <a href="${state.data.posts[i].link}" class="link-secondary fw-normal" data-id="${state.data.posts[i].id}" target="_blank" rel="noopener noreferrer">${state.data.posts[i].title}</a>
+      <button type="button" class="btn btn-outline-primary btn-sm" data-id="${state.data.posts[i].id}" data-bs-toggle="modal" data-bs-target="#modal">Просмотр</button>`;
+    } else {
+      liPosts.innerHTML = `
       <a href="${state.data.posts[i].link}" class="fw-bold" data-id="${state.data.posts[i].id}" target="_blank" rel="noopener noreferrer">${state.data.posts[i].title}</a>
       <button type="button" class="btn btn-outline-primary btn-sm" data-id="${state.data.posts[i].id}" data-bs-toggle="modal" data-bs-target="#modal">Просмотр</button>`;
+    }
     ulPosts.prepend(liPosts);
   }
 }

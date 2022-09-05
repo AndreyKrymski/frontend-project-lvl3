@@ -6,6 +6,8 @@ export default function renderButtonPosts(state) {
   buttonPost.forEach((item) => {
     item.addEventListener('click', (e) => {
       e.preventDefault();
+      const [visitPost] = state.data.posts.filter((post) => post.id === e.target.dataset.id);
+      visitPost.isVisited = true;
       view(state, e.target.dataset.id);
     });
   });
@@ -13,6 +15,8 @@ export default function renderButtonPosts(state) {
   href.forEach((it) => {
     it.addEventListener('click', (e) => {
       e.preventDefault();
+      const [visitPost] = state.data.posts.filter((post) => post.id === e.target.dataset.id);
+      visitPost.isVisited = true;
       e.target.classList.remove('fw-bold');
       e.target.classList.add('link-secondary', 'fw-normal');
       window.open(e.target.href);

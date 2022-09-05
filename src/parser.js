@@ -15,6 +15,7 @@ export default function parser(response, message) {
       link: post.querySelector('link').textContent,
       title: post.querySelector('title').textContent,
       description: post.querySelector('description').textContent,
+      isVisited: false,
       feedId,
     });
   });
