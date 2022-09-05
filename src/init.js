@@ -54,15 +54,13 @@ export default () => {
             .then((feeds) => {
               const different = feeds.flatMap((item) => item.posts)
                 .filter((it) => !state.data.posts.map((ir) => ir.link).includes(it.link));
-              if (different.length !== 0) {
-                different.forEach((iter) => {
-                  iter.id = _.uniqueId();
-                });
-                watcheState.data.posts.unshift(...different);
-              }
+              different.forEach((post) => {
+                post.id = _.uniqueId();
+              });
+              watcheState.data.posts.unshift(...different);
             })
             .catch((error) => {
-              console.log(error);
+              watcheState.message = error.message;
             });
         }
         setTimeout(updatePosts, 5000);
@@ -78,7 +76,12 @@ export default () => {
           .then(() => axios.get(`https://allorigins.hexlet.app/get?disableCache=true&url=${encodeURIComponent(url)}`))
           .then((response) => {
             const { feed, posts } = parser(response.data.contents, i18nextInstance.t('errors.errorValidRSS'));
-            posts.forEach((item) => item.id = _.uniqueId());
+            const feedId = _.uniqueId();
+            feed.feedId = feedId;
+            posts.forEach((post) => {
+              post.id = _.uniqueId();
+              post.feedId = feedId;
+            });
             state.statusValidation = true;
             watcheState.message = i18nextInstance.t('status.valid');
             state.data.url.push(url);
