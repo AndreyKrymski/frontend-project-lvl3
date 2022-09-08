@@ -1,5 +1,3 @@
-import _ from 'lodash';
-
 export default function parser(response, message) {
   const pars = new DOMParser();
   const xml = pars.parseFromString(response, 'application/xml');
@@ -7,20 +5,19 @@ export default function parser(response, message) {
   if (parsererror) {
     throw new Error(message);
   }
-  const item = xml.querySelectorAll('item');
+  const items = xml.querySelectorAll('item');
   const posts = [];
-  item.forEach((it) => {
+  items.forEach((post) => {
     posts.push({
-      id: _.uniqueId(),
-      link: it.querySelector('link').textContent,
-      text: it.querySelector('title').textContent,
-      description: it.querySelector('description').textContent,
+      link: post.querySelector('link').textContent,
+      title: post.querySelector('title').textContent,
+      description: post.querySelector('description').textContent,
+      isVisited: false,
     });
   });
   const feed = {
-    fidsTitle: xml.querySelector('title').textContent,
-    fidsDescription: xml.querySelector('description').textContent,
-    post: posts,
+    title: xml.querySelector('title').textContent,
+    description: xml.querySelector('description').textContent,
   };
-  return feed;
+  return { feed, posts };
 }

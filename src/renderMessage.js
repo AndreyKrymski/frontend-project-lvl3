@@ -1,6 +1,6 @@
 import elements from './elementsDom.js';
 
-export default function render(state) {
+export default function renderMessage(state) {
   if (state.statusValidation) {
     elements.textFeedback.classList.replace('text-danger', 'text-success');
     elements.urlInput.classList.remove('is-invalid');
