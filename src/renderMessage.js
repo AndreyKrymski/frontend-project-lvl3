@@ -1,6 +1,6 @@
 import elements from './elementsDom.js';
 
-export default function renderMessage(state) {
+export default function renderMessage(state, i18nextInstance) {
   if (state.statusValidation) {
     elements.textFeedback.classList.replace('text-danger', 'text-success');
     elements.urlInput.classList.remove('is-invalid');
@@ -10,5 +10,9 @@ export default function renderMessage(state) {
     elements.urlInput.classList.add('is-invalid');
     elements.textFeedback.classList.replace('text-success', 'text-danger');
   }
-  elements.textFeedback.textContent = state.message;
+  if (state.message === 'Network Error') {
+    elements.textFeedback.textContent = i18nextInstance.t('errors.netWork');
+  } else {
+    elements.textFeedback.textContent = state.message;
+  }
 }
