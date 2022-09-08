@@ -38,7 +38,7 @@ export default () => {
         if (path === 'isProcessing') {
           renderProccess(state.isProcessing);
         } else if (path === 'message') {
-          renderMessage(state);
+          renderMessage(state, i18nextInstance);
         } else if (path === 'data.feeds') {
           renderFeeds(state, i18nextInstance);
         } else if (path === 'data.posts') {
@@ -60,7 +60,7 @@ export default () => {
               watcheState.data.posts.unshift(...different);
             })
             .catch((error) => {
-              watcheState.message = error.message;
+              console.log(error.message);
             });
         }
         setTimeout(updatePosts, 5000);
